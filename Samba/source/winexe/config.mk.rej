@@ -1,0 +1,27 @@
+--- wmi-1.3.14/Samba/source/winexe/config.mk	2007-05-02 03:14:07.000000000 +0530
++++ wmi-1.3.14-patched/Samba/source/winexe/config.mk	2013-06-19 17:55:58.493105136 +0530
+@@ -14,6 +14,24 @@
+ 		RPC_NDR_SVCCTL
+ # End BINARY winexe
+ #################################
++#################################
++# Start Library libwincmd
++[LIBRARY::wincmd]
++VERSION=0.80
++SO_VERSION=1
++LIBRARY_REALNAME = libwincmd.$(SHLIBEXT)
++OBJ_FILES = \
++                wincmd.o \
++                service.o \
++                async.o \
++                winexesvc/winexesvc_exe.o
++PRIVATE_DEPENDENCIES = \
++                POPT_SAMBA \
++                POPT_CREDENTIALS \
++                LIBPOPT \
++                RPC_NDR_SVCCTL
++# End BINARY wincmd
++#################################
+ 
+ winexe/winexesvc/winexesvc_exe.c: winexe/winexesvc/winexesvc.c
+ 	@$(MAKE) -C winexe/winexesvc
