@@ -17,7 +17,10 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <stdarg.h>
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 #include "includes.h"
 #include "lib/cmdline/popt_common.h"
@@ -35,16 +38,14 @@
 #include "lib/com/proto.h"
 #include "lib/com/dcom/proto.h"
 
+#include <stdarg.h>
+
 #include "wmi/wmi.h"
 
 struct WBEMCLASS;
 struct WBEMOBJECT;
 
-#include "wmi/proto.h"
-
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
+//#include "wmi/proto.h"
 
 // strLimitPf function
 #define STR_PRINT 0
@@ -120,12 +121,12 @@ static void parse_args(int argc, char *argv[], struct program_args *pmyargs) {
       }
    }
 
-//   if (argc_new != 3
-//      || strncmp(argv_new[1], "//", 2) != 0) {
-//      poptPrintUsage(pc, stdout, 0);
-//      poptFreeContext(pc);
-//      exit(1);
-//   }
+   if (argc_new < 3
+      || strncmp(argv_new[1], "//", 2) != 0) {
+      poptPrintUsage(pc, stdout, 0);
+      poptFreeContext(pc);
+      exit(1);
+   }
 
    /* skip over leading "//" in host name */
    pmyargs->hostname = argv_new[1] + 2;
@@ -240,7 +241,7 @@ int main(int argc, char **argv) {
    errCheck("Login to remote object.", args.hostname, result, ctx);
 
    importKey[0]='\0';
-   getTimeStr(&importKey, 64);
+   getTimeStr(&importKey[0], 64);
    
    queryStr = args.query;
    if (args.query[0] == '@') {
